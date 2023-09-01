@@ -2,14 +2,21 @@
 
 {% block body %}
 
-    <h1>{{game.title}}</h1>
+    <h1 class="btn btn-warning">{{game.title}}</h1>
     <p>{{game.question}}</p>
     <hr>
 
     <form action="{% url 'games:answer_create' game_id=game.id %}" method="POST">
         {% csrf_token %}
-        <button type="submit" name="choice" value="1">{{game.answer1}}</button>
-        <button type="submit" name="choice" value="2">{{game.answer2}}</button>
+        <a href="{% url 'games:choice' game_id=game.id user_choice=1 %}" class="btn btn-primary">
+            {{ game.answer1 }}
+        </a>
+    
+        <a href="{% url 'games:choice' game_id=game.id user_choice=2 %}" class="btn btn-primary">
+            {{ game.answer2 }}
+        </a>
     </form>
 
+
 {% endblock %}
+

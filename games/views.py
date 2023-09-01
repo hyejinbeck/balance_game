@@ -3,7 +3,9 @@ from .models import Game, Answer
 from .forms import GameForm, AnswerForm
 
 # Create your views here.
-def index(request): 
+
+# 메인화면 보여주는기능
+def index(request):   
     games = Game.objects.all()
 
     context = {
@@ -12,7 +14,7 @@ def index(request):
 
     return render(request, 'index.html', context)
 
-
+# 게임생성 기능
 def create(request): 
     if request.method == 'POST': # post요청일때 
         form = GameForm(request.POST)   # 프론트엔드에 검증
@@ -28,8 +30,11 @@ def create(request):
     } 
     return render(request,'form.html', context)
 
+# 게임 하나하나 개별페이지
 def detail(request,id):
+    # Game클래스 그 자체(제목,질문)
     game = Game.objects.get(id=id)
+    # Answer 선택할수 있게 
     answer_form = AnswerForm()
 
     context = {
@@ -41,20 +46,39 @@ def detail(request,id):
 
 def answer_create(request, game_id): 
 
-    # 사용자가 입력한 정보를 form에 입력
+    # 사용자가 정답 클릭한거(제출한거 POST로 받아서 씌움)
     answer_form = AnswerForm(request.POST)  
 
-    # 유효성 검사 (프론트엔드)
+    # db에 선택지 보낸야함 
     if answer_form.is_valid():  
-        # form을 저장(백엔드)-> 추가로 넣어야 하는 데이터를 넣기 위해, 저장 멈춰!
+
         answer = answer_form.save(commit=False)
-        # 어떤 데이터가 필요하다? 그럼 잠깐 저장 멈춰 
-        
+        # class AnswerForm에서 뺀거 있으니까 멈춰 
+        # 뺀거 game 선택지, 어떤거하나하나니까 games 말고 game
         game = Game.objects.get(id=game_id)
 
+        # 정답지(클릭한거) db 보내기전에 합치기
         answer.game = game 
-
+        # 클릭한거 뭔지 저장 
         answer.save()
-
+        #클릭한상태에서 그대로 
         return redirect('games:detail', id=game_id)
 
+# 클릭한거 받아서 어떤거 클릭했는지 구현 
+def choice(request, game_id, user_choice):
+    game = Game.objects.get(id=game_id)
+
+    # 뭘 눌렀는지에 따라 값 달라짐 
+    if user_choice == 1:
+        choice_answer = game.answer1
+    elif user_choice == 2:
+        choice_answer = game.answer2
+    else:
+        chosen_answer = "Invalid Choice"  # 예외 처리 
+
+    context = {
+        'game': game,
+        'choice_answer': choice_answer,
+    }
+
+    return render(request, 'choice.html', context)

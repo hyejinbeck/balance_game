@@ -1,8 +1,9 @@
 {% extends 'base.html'%}
 
 {% block body %}
+
     {% for game in games %}
-    <a href="{% url 'games:detail' id=game.id %}">{{game.title}}</a>
+    <a href="{% url 'games:detail' id=game.id %}" class="btn btn-warning" > {{game.title}}</a>
     {% endfor %}
 
 {% endblock %}
