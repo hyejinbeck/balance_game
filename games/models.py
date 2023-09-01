@@ -11,3 +11,4 @@ class Game(models.Model):
 class Answer(models.Model): 
     game = models.ForeignKey(Game,on_delete=models.CASCADE)
     choice = models.TextField()
+    
