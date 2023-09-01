@@ -44,6 +44,7 @@ def detail(request,id):
     
     return render(request, 'detail.html', context)
 
+# 유저가 뭐눌렀는지 저장구현 
 def answer_create(request, game_id): 
 
     # 사용자가 정답 클릭한거(제출한거 POST로 받아서 씌움)
@@ -71,10 +72,8 @@ def choice(request, game_id, user_choice):
     # 뭘 눌렀는지에 따라 값 달라짐 
     if user_choice == 1:
         choice_answer = game.answer1
-    elif user_choice == 2:
+    else: 
         choice_answer = game.answer2
-    else:
-        chosen_answer = "Invalid Choice"  # 예외 처리 
 
     context = {
         'game': game,
