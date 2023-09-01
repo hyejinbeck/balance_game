@@ -1,0 +1,15 @@
+{% extends 'base.html'%}
+
+{% block body %}
+
+    <h1>{{game.title}}</h1>
+    <p>{{game.question}}</p>
+    <hr>
+
+    <form action="{% url 'games:answer_create' game_id=game.id %}" method="POST">
+        {% csrf_token %}
+        <button type="submit" name="choice" value="1">{{game.answer1}}</button>
+        <button type="submit" name="choice" value="2">{{game.answer2}}</button>
+    </form>
+
+{% endblock %}
